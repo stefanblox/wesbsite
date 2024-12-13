@@ -11,15 +11,14 @@
         }
         .corner-image {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            padding: 20px;
             width: 100px; /* adjust size as needed */
             height: auto;
             animation: spin 10s linear infinite;
         }
         .corner-image:hover {
-            animation-play-state: paused;
-            color: #ff0000;
+            transform: rotate(0deg);
+            animation: 2s ease-in-out infinite;
         }
         @keyframes spin {
             from {
