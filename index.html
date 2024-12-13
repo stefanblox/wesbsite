@@ -15,6 +15,19 @@
             right: 20px;
             width: 100px; /* adjust size as needed */
             height: auto;
+            animation: spin 10s linear infinite;
+        }
+        .corner-image:hover {
+            animation-play-state: paused;
+            color: #ff0000;
+        }
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
