@@ -13,12 +13,12 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            width: 100px; /* adjust size as needed */
+            width: 100px;
             height: auto;
-            animation: spin 10s linear infinite;
+            transform-origin: center;
         }
-        .corner-image:hover {
-            transform: 2s rotate(0deg) ease-in-out;
+        .corner-image.playing {
+            animation: spin-and-bounce 0.5s infinite;
         }
         @keyframes spin {
             from {
@@ -28,7 +28,62 @@
                 transform: rotate(360deg);
             }
         }
+        @keyframes spin-and-bounce {
+            0%, 100% {
+                transform: rotate(var(--rotation)) scale(1);
+            }
+            50% {
+                transform: rotate(var(--rotation)) scale(1.1);
+            }
+        }
+        .music-player {
+            position: fixed;
+            top: 130px;
+            right: 20px;
+        }
     </style>
+    <script>
+        let audioContext;
+        let analyser;
+        let dataArray;
+
+        window.onload = () => {
+            const audio = document.querySelector('audio');
+            const image = document.querySelector('.corner-image');
+            
+            audio.addEventListener('play', () => {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    analyser = audioContext.createAnalyser();
+                    const source = audioContext.createMediaElementSource(audio);
+                    source.connect(analyser);
+                    analyser.connect(audioContext.destination);
+                    
+                    analyser.fftSize = 256;
+                    const bufferLength = analyser.frequencyBinCount;
+                    dataArray = new Uint8Array(bufferLength);
+                }
+                animate();
+            });
+
+            function animate() {
+                if (!audio.paused) {
+                    analyser.getByteFrequencyData(dataArray);
+                    
+                    // Get the average bass frequency
+                    const bass = dataArray.slice(0, 10).reduce((a, b) => a + b) / 10;
+                    
+                    // Scale based on bass intensity
+                    const scale = 1 + (bass / 512);
+                    const rotation = (bass / 2) % 360;
+                    
+                    image.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+                    
+                    requestAnimationFrame(animate);
+                }
+            }
+        };
+    </script>
 </head>
 <body>
     <!-- welcoming section thingy thing -->
@@ -62,7 +117,17 @@
         <ul>
             <li><a href="https://github.com/stefanblox">gethub</a></li>
         </ul>
+    <h1>free advertisement!!!</h1>
+        <ul>
+            <a href="https://R74n.com"><img src="https://R74n.com/icons/88x31.png" alt="R74n"></a>
+        </ul>
     </section>
     <img src="Captura de tela 2024-12-12 113246.png" alt="Corner Image" class="corner-image">
+    <div class="music-player">
+        <audio controls>
+            <source src="loft hater's car.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
 </body>
 </html>
