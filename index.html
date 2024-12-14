@@ -16,10 +16,6 @@
             width: 100px;
             height: auto;
             transform-origin: center;
-            animation: spin 10s linear infinite;
-        }
-        .corner-image.playing {
-            animation: spin-and-bounce 0.5s infinite;
         }
         @keyframes spin {
             from {
@@ -27,14 +23,6 @@
             }
             to {
                 transform: rotate(360deg);
-            }
-        }
-        @keyframes spin-and-bounce {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.2);
             }
         }
         .music-player {
@@ -78,6 +66,7 @@
                     const scale = 1 + (bass / 512);
                     
                     image.style.transform = `scale(${scale})`;
+                    image.animation = 'spin 10s linear infinite';
                     
                     requestAnimationFrame(animate);
                 }
