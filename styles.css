@@ -1,0 +1,32 @@
+        body {
+            font-family: "Comic Sans MS", "Comic Sans", cursive;
+            background-color: #1d1d1c;
+            color: #fff;
+        }
+
+        .corner-image {
+            position: fixed;
+            padding: 20px;
+            width: 100px;
+            /* adjust size as needed */
+            height: auto;
+            animation: spin 10s linear infinite;
+        }
+
+        .corner-image:hover {
+            transition: transform 1 ease 0;
+            transform: rotate(0deg);
+            animation-play-state: paused;
+            /* color: #ff0000;
+            This property is not gonna be an effect on images */
+
+        }
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
