@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Calculator Adventure</title>
+    <style>
+        body {
+            font-family: "Comic Sans MS", "Comic Sans", cursive;
+            background-color: #181818;
+            color: white;
+        }
+        .calculator {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: #2b2b2c;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .display {
+            background-color: #72f0a6;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 24px;
+            text-align: right;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button {
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0099ff;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        button:hover {
+            transform: scale(1.05);
+            background-color: #0044ff;
+        }
+        .operator {
+            background-color: #e74c3c;
+        }
+        #status {
+            margin-top: 20px;
+            text-align: center;
+            font-style: italic;
+        }
+        .stats-panel {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #2c3e50;
+            border-radius: 5px;
+        }
+        .level-up {
+            animation: levelUpEffect 1s ease-in-out;
+        }
+        @keyframes levelUpEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .combo-indicator {
+            position: absolute;
+            color: #f1c40f;
+            font-size: 24px;
+            font-weight: bold;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="stats-panel">
+            <div>Level: <span id="level">1</span></div>
+            <div>XP: <span id="xp">0</span> / <span id="next-level">100</span></div>
+        </div>
+        <div class="buttons">
+            <button onclick="appendNumber(7)">7</button>
+            <button onclick="appendNumber(8)">8</button>
+            <button onclick="appendNumber(9)">9</button>
+            <button class="operator" onclick="setOperator('+')">+</button>
+            
+            <button onclick="appendNumber(4)">4</button>
+            <button onclick="appendNumber(5)">5</button>
+            <button onclick="appendNumber(6)">6</button>
+            <button class="operator" onclick="setOperator('-')">-</button>
+            
+            <button onclick="appendNumber(1)">1</button>
+            <button onclick="appendNumber(2)">2</button>
+            <button onclick="appendNumber(3)">3</button>
+            <button class="operator" onclick="setOperator('*')">×</button>
+            
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="appendNumber(0)">0</button>
+            <button onclick="calculate()">=</button>
+            <button class="operator" onclick="setOperator('/')">÷</button>
+        </div>
+        <div id="status">ready for adventure!</div>
+    </div>
+
+    <script>
+        let currentValue = '0';
+        let storedValue = null;
+        let currentOperator = null;
+        let playerXP = 0;
+        let playerLevel = 1;
+        let comboCount = 0;
+        
+        const rpgMessages = [
+            "critical hit! super effective!",
+            "you gained {xp} XP from that calculation!",
+            "a wild equation appears!",
+            "math power level increasing!",
+            "you've unlocked a new calculator skill!",
+            "COMBO x{combo}! Mathematical mastery!",
+            "your calculator grows stronger!",
+            "epic calculation achieved!",
+            "you're becoming a Math Wizard!",
+            "the numbers speak to you!"
+        ];
+
+        const specialCombos = {
+            '42': 'the answer to everything! (+50 XP)',
+            '1337': 'elite calculator skills! (+100 XP)',
+            '8008': 'classic calculator trick! (+30 XP)',
+            '12345': 'sequential combo! (+80 XP)'
+        };
+
+        function updateDisplay() {
+            document.getElementById('display').textContent = currentValue;
+            document.getElementById('xp').textContent = playerXP;
+            document.getElementById('level').textContent = playerLevel;
+            document.getElementById('next-level').textContent = playerLevel * 100;
+        }
+
+        function gainXP(amount) {
+            playerXP += amount;
+            if (playerXP >= playerLevel * 100) {
+                levelUp();
+            }
+            updateDisplay();
+        }
+
+        function levelUp() {
+            playerLevel++;
+            playerXP = 0;
+            const levelElement = document.getElementById('level');
+            levelElement.classList.add('level-up');
+            showStatus(`LEVEL UP! you're now level ${playerLevel}!`);
+            setTimeout(() => levelElement.classList.remove('level-up'), 1000);
+        }
+
+        function checkSpecialCombos(value) {
+            if (specialCombos[value]) {
+                showStatus(specialCombos[value]);
+                gainXP(parseInt(value.length) * 20);
+                createComboEffect();
+            }
+        }
+
+        function createComboEffect() {
+            const combo = document.createElement('div');
+            combo.className = 'combo-indicator';
+            combo.style.left = `${Math.random() * 80}%`;
+            combo.style.top = `${Math.random() * 80}%`;
+            combo.textContent = '★ COMBO! ★';
+            document.body.appendChild(combo);
+            setTimeout(() => combo.remove(), 1000);
+        }
+
+        function appendNumber(num) {
+            if (currentValue === '0') {
+                currentValue = num.toString();
+            } else {
+                currentValue += num.toString();
+            }
+            updateDisplay();
+        }
+
+        function setOperator(operator) {
+            currentOperator = operator;
+            storedValue = parseFloat(currentValue);
+            currentValue = '0';
+            comboCount++;
+            showRandomStatus();
+        }
+
+function calculate() {
+    if (currentOperator === null || storedValue === null) return;
+    
+    const secondValue = parseFloat(currentValue);
+    let result;
+
+    switch(currentOperator) {
+        case '+': result = storedValue + secondValue; break;
+        case '-': result = storedValue - secondValue; break;
+        case '*': result = storedValue * secondValue; break;
+        case '/': result = storedValue / secondValue; break;
+    }
+
+    currentValue = result.toString();
+    
+    // Check for special combos after calculation
+    if (specialCombos[result.toString()]) {
+        showStatus(specialCombos[result.toString()]);
+        gainXP(parseInt(result.toString().length) * 20);
+        createComboEffect();
+    } else {
+        // Regular XP gain for normal calculations
+        const xpGained = Math.floor(Math.abs(result) * 0.5) + (comboCount * 10);
+        gainXP(xpGained);
+        showStatus(`calculation complete! gained ${xpGained} XP!`);
+    }
+
+    storedValue = null;
+    currentOperator = null;
+    comboCount = 0;
+    updateDisplay();
+}
+
+
+        function showStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        function showRandomStatus() {
+            let message = rpgMessages[Math.floor(Math.random() * rpgMessages.length)];
+            message = message.replace('{xp}', Math.floor(Math.random() * 50) + 10);
+            message = message.replace('{combo}', comboCount);
+            showStatus(message);
+        }
+
+        function clearDisplay() {
+            currentValue = '0';
+            storedValue = null;
+            currentOperator = null;
+            comboCount = 0;
+            updateDisplay();
+            showStatus("calculator reset! ready for new adventures!");
+        }
+    </script>
+</body>
+</html>
