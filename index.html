@@ -56,21 +56,22 @@
             });
 
             function animate() {
-                if (!audio.paused) {
-                    analyser.getByteFrequencyData(dataArray);
-                    
-                    // Get the average bass frequency
-                    const bass = dataArray.slice(0, 10).reduce((a, b) => a + b) / 10;
-                    
-                    // Scale based on bass intensity
-                    const scale = 1 + (bass / 512);
-                    
-                    image.style.animation = 'spin 10s linear infinite';
-                    image.style.transform = `scale(${scale})`;
-                    
-                    requestAnimationFrame(animate);
-                }
-            }
+        if (!audio.paused) {
+            analyser.getByteFrequencyData(dataArray);
+            
+            // Get the average bass frequency
+            const bass = dataArray.slice(0, 10).reduce((a, b) => a + b) / 10;
+            
+            // Scale based on bass intensity
+            const scale = 1 + (bass / 512);
+            
+            // Combine both rotate and scale transformations
+            image.style.animation = 'spin 10s linear infinite';
+            image.style.transform = `scale(${scale}) rotate(${Date.now() / 28}deg)`;
+            
+            requestAnimationFrame(animate);
+        }
+    }
         };
     </script>
 </head>
