@@ -75,9 +75,8 @@
                     
                     // Scale based on bass intensity
                     const scale = 1 + (bass / 512);
-                    const rotation = (bass / 2) % 360;
                     
-                    image.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+                    image.style.transform = `scale(${scale})`;
                     
                     requestAnimationFrame(animate);
                 }
