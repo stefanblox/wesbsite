@@ -16,7 +16,6 @@
             width: 100px;
             height: auto;
             transform-origin: center;
-            animation: spin 10s linear infinite;
         }
         @keyframes spin {
             from {
@@ -67,7 +66,8 @@
             const scale = 1 + (bass / 512);
             
             // Combine both rotate and scale transformations
-            image.style.transform.scale = `(${scale})`;
+            image.style.animation = 'spin 10s linear infinite';
+            image.style.transform = `scale(${scale}) rotate(${Date.now() / 28}deg)`;
             
             requestAnimationFrame(animate);
         }
