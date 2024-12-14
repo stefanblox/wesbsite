@@ -65,8 +65,8 @@
                     // Scale based on bass intensity
                     const scale = 1 + (bass / 512);
                     
+                    image.style.animation = 'spin 10s linear infinite';
                     image.style.transform = `scale(${scale})`;
-                    image.animation = 'spin 10s linear infinite';
                     
                     requestAnimationFrame(animate);
                 }
