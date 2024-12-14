@@ -66,8 +66,7 @@
             const scale = 1 + (bass / 512);
             
             // Combine both rotate and scale transformations
-            image.style.animation = 'spin 10s linear infinite';
-            image.style.transform = `scale(${scale}) rotate(${Date.now() / 28}deg)`;
+            image.style.transform = `scale(${scale}) spin 10s linear infinite`;
             
             requestAnimationFrame(animate);
         }
