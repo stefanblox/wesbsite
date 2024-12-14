@@ -16,64 +16,17 @@
             width: 100px;
             height: auto;
             transform-origin: center;
+            animation: spin 10s linear infinite;
         }
         @keyframes spin {
-            from {
+            from{
                 transform: rotate(0deg);
             }
-            to {
+            to{
                 transform: rotate(360deg);
             }
         }
-        .music-player {
-            position: fixed;
-            top: 130px;
-            right: 20px;
-        }
     </style>
-    <script>
-        let audioContext;
-        let analyser;
-        let dataArray;
-
-        window.onload = () => {
-            const audio = document.querySelector('audio');
-            const image = document.querySelector('.corner-image');
-            
-            audio.addEventListener('play', () => {
-                if (!audioContext) {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    analyser = audioContext.createAnalyser();
-                    const source = audioContext.createMediaElementSource(audio);
-                    source.connect(analyser);
-                    analyser.connect(audioContext.destination);
-                    
-                    analyser.fftSize = 256;
-                    const bufferLength = analyser.frequencyBinCount;
-                    dataArray = new Uint8Array(bufferLength);
-                }
-                animate();
-            });
-
-            function animate() {
-        if (!audio.paused) {
-            analyser.getByteFrequencyData(dataArray);
-            
-            // Get the average bass frequency
-            const bass = dataArray.slice(0, 10).reduce((a, b) => a + b) / 10;
-            
-            // Scale based on bass intensity
-            const scale = 1 + (bass / 512);
-            
-            // Combine both rotate and scale transformations
-            image.style.animation = 'spin 10s linear infinite';
-            image.style.transform = `scale(${scale}) rotate(${Date.now() / 28}deg)`;
-            
-            requestAnimationFrame(animate);
-        }
-    }
-        };
-    </script>
 </head>
 <body>
     <!-- welcoming section thingy thing -->
@@ -119,7 +72,7 @@
         </ul>
         <h2>friends</h2>
         <ul>
-            <!-- yes -->
+            <a href="https://ztunedd.neocities.org"><img src="https://ztunedd.neocities.org/button.png"></a>
         </ul>
         <h1>this website</h1>
         <ul>
@@ -127,11 +80,5 @@
         </ul>
     </section>
     <img src="images/Captura de tela 2024-12-12 113246.png" alt="Corner Image" class="corner-image">
-    <div class="music-player">
-        <audio controls>
-            <source src="loft hater's car.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
 </body>
 </html>
