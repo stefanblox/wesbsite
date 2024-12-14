@@ -14,6 +14,7 @@
         }
 
         .corner-image:hover {
+            transition: transform 1 ease 0;
             transform: rotate(0deg);
             animation-play-state: paused;
             /* color: #ff0000;
